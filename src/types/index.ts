@@ -172,3 +172,130 @@ export interface Message {
   image?: string;
   createdAt: string;
 }
+
+// ---------- Content & Exercise Bank (Kho nội dung & Bài tập) ----------
+
+// Reusable audio library: an audio file is uploaded once and referenced
+// by id everywhere else (flashcards, listening/reading materials).
+export interface AudioAsset {
+  id: string;
+  name: string;
+  dataUrl: string;
+  createdAt: string;
+}
+
+export interface Flashcard {
+  id: string;
+  word: string;
+  meaning: string;
+  wordAudioId?: string;
+  example?: string;
+  exampleAudioId?: string;
+  order: number;
+}
+
+export interface FlashcardSet {
+  id: string;
+  title: string;
+  cards: Flashcard[];
+  createdAt: string;
+}
+
+export interface ListeningMaterial {
+  id: string;
+  title: string;
+  audioId?: string;
+  transcript?: string;
+  createdAt: string;
+}
+
+export interface ReadingMaterial {
+  id: string;
+  title: string;
+  text: string;
+  audioId?: string;
+  createdAt: string;
+}
+
+// Grammar Test reuses the existing Test/Question engine (MC + Short Answer),
+// just tagged so it shows up in the Exercise Bank. No Lesson relationship.
+export interface GrammarTest {
+  id: string;
+  title: string;
+  level?: Level;
+  questions: Question[];
+  createdAt: string;
+}
+
+// Listening / Reading exercises: a material plus MC/Short-Answer questions.
+export interface ListeningExercise {
+  id: string;
+  title: string;
+  materialId: string;
+  level?: Level;
+  questions: Question[];
+  createdAt: string;
+}
+
+export interface ReadingExercise {
+  id: string;
+  title: string;
+  materialId: string;
+  level?: Level;
+  questions: Question[];
+  createdAt: string;
+}
+
+// Vocabulary Test: generated from flashcards, with its own question shape.
+export type VocabQuestionType =
+  | "listen_choose_word"
+  | "see_word_choose_meaning"
+  | "listen_choose_meaning"
+  | "listen_type_word"
+  | "fill_blank";
+
+export const VOCAB_QUESTION_TYPE_LABELS: Record<VocabQuestionType, string> = {
+  listen_choose_word: "Nghe → chọn từ",
+  see_word_choose_meaning: "Xem từ → chọn nghĩa",
+  listen_choose_meaning: "Nghe → chọn nghĩa",
+  listen_type_word: "Nghe → gõ lại từ",
+  fill_blank: "Điền vào chỗ trống",
+};
+
+export interface VocabQuestion {
+  id: string;
+  type: VocabQuestionType;
+  flashcardId: string;
+  prompt: string; // display text (word, meaning, or example with blank)
+  choices?: string[]; // for choose-type questions
+  correctAnswer: string;
+  order: number;
+}
+
+export interface VocabularyTest {
+  id: string;
+  title: string;
+  level?: Level;
+  flashcardSetIds: string[];
+  questions: VocabQuestion[];
+  createdAt: string;
+}
+
+export type ExerciseKind = "vocabulary" | "grammar" | "listening" | "reading";
+
+export const EXERCISE_KIND_LABELS: Record<ExerciseKind, string> = {
+  vocabulary: "Vocabulary Test",
+  grammar: "Grammar Test",
+  listening: "Listening Exercise",
+  reading: "Reading Exercise",
+};
+
+// Lightweight summary row used by the Exercise Bank list (search/filter view)
+export interface ExerciseSummary {
+  id: string;
+  kind: ExerciseKind;
+  title: string;
+  level?: Level;
+  questionCount: number;
+  createdAt: string;
+}
