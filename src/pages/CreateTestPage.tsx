@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { v4 as uuid } from "uuid";
-import { ArrowLeft, Plus, Save } from "lucide-react";
-import { useAppStore, makeDefaultOptions } from "../store/useAppStore";
+import { ArrowLeft, Save } from "lucide-react";
+import { useAppStore } from "../store/useAppStore";
 import { Question } from "../types";
-import QuestionCard from "../components/content/QuestionCard";
+import QuestionListEditor from "../components/content/QuestionListEditor";
 
 function isQuestionValid(q: Question): boolean {
   if (!q.content.trim()) return false;
@@ -47,29 +46,6 @@ export default function CreateTestPage() {
     );
   }
 
-  function updateQuestion(id: string, patch: Partial<Question>) {
-    setQuestions((prev) =>
-      prev.map((q) => (q.id === id ? { ...q, ...patch } : q))
-    );
-  }
-
-  function addQuestion() {
-    const newQuestion: Question = {
-      id: uuid(),
-      type: "multiple_choice",
-      content: "",
-      options: makeDefaultOptions(),
-      order: questions.length,
-    };
-    setQuestions((prev) => [...prev, newQuestion]);
-  }
-
-  function deleteQuestion(id: string) {
-    setQuestions((prev) =>
-      prev.filter((q) => q.id !== id).map((q, idx) => ({ ...q, order: idx }))
-    );
-  }
-
   function handleSave() {
     setShowValidation(true);
     const allValid = questions.every(isQuestionValid);
@@ -97,27 +73,7 @@ export default function CreateTestPage() {
 
       <h1 className="text-2xl font-bold mb-6">{test.title}</h1>
 
-      <div className="space-y-5">
-        {questions.map((q, idx) => (
-          <QuestionCard
-            key={q.id}
-            question={q}
-            displayNumber={idx + 1}
-            onChange={(patch) => updateQuestion(q.id, patch)}
-            onDelete={() => deleteQuestion(q.id)}
-            canDelete={questions.length > 1}
-            showValidation={showValidation}
-          />
-        ))}
-      </div>
-
-      <button
-        type="button"
-        className="btn-secondary mt-5 w-full justify-center py-3"
-        onClick={addQuestion}
-      >
-        <Plus size={16} /> Thêm câu hỏi
-      </button>
+      <QuestionListEditor questions={questions} onChange={setQuestions} showValidation={showValidation} />
     </div>
   );
 }
