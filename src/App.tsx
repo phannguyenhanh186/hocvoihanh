@@ -5,6 +5,16 @@ import ClassDetailPage from "./pages/ClassDetailPage";
 import ContentPage from "./pages/ContentPage";
 import CreateTestPage from "./pages/CreateTestPage";
 import StudentsPage from "./pages/StudentsPage";
+import LibraryLayout from "./pages/library/LibraryLayout";
+import LibraryMaterialsPage from "./pages/library/LibraryMaterialsPage";
+import LibraryExercisesPage from "./pages/library/LibraryExercisesPage";
+import FlashcardSetEditorPage from "./pages/library/FlashcardSetEditorPage";
+import ListeningMaterialEditorPage from "./pages/library/ListeningMaterialEditorPage";
+import ReadingMaterialEditorPage from "./pages/library/ReadingMaterialEditorPage";
+import GrammarTestEditorPage from "./pages/library/GrammarTestEditorPage";
+import ListeningExerciseEditorPage from "./pages/library/ListeningExerciseEditorPage";
+import ReadingExerciseEditorPage from "./pages/library/ReadingExerciseEditorPage";
+import VocabularyTestEditorPage from "./pages/library/VocabularyTestEditorPage";
 
 export default function App() {
   return (
@@ -17,6 +27,18 @@ export default function App() {
           <Route path="content" element={<ContentPage />} />
           <Route path="content/create" element={<CreateTestPage />} />
           <Route path="students" element={<StudentsPage />} />
+          <Route path="library" element={<LibraryLayout />}>
+            <Route index element={<Navigate to="materials" replace />} />
+            <Route path="materials" element={<LibraryMaterialsPage />} />
+            <Route path="materials/flashcards/:setId" element={<FlashcardSetEditorPage />} />
+            <Route path="materials/listening/:materialId" element={<ListeningMaterialEditorPage />} />
+            <Route path="materials/reading/:materialId" element={<ReadingMaterialEditorPage />} />
+            <Route path="exercises" element={<LibraryExercisesPage />} />
+            <Route path="exercises/vocabulary/:testId" element={<VocabularyTestEditorPage />} />
+            <Route path="exercises/grammar/:testId" element={<GrammarTestEditorPage />} />
+            <Route path="exercises/listening/:exerciseId" element={<ListeningExerciseEditorPage />} />
+            <Route path="exercises/reading/:exerciseId" element={<ReadingExerciseEditorPage />} />
+          </Route>
         </Route>
         <Route path="*" element={<Navigate to="/teacher/classes" replace />} />
       </Routes>
